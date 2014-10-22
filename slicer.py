@@ -109,7 +109,6 @@ exclusive_group = group.add_mutually_exclusive_group()
 ## --registration (-r)
 exclusive_group.add_argument('-r', '--registration', action=store_filename, metavar="FILE", 
     default=None, help="Will mimic the registration output of FSL.")
-)
 
 ## FSL overlay
 group.add_argument('--overlay', action=store_overlay, nargs=3, default=None,
