@@ -434,7 +434,7 @@ if __name__ == "__main__":
                         result.stderr)
             
             # pngappend
-            pngappend_args = compile_pngappend_args(parser, args, slice_fnames, 1, 2, ["in_ref_1.png", "in_ref_2.png"])
+            pngappend_args = compile_pngappend_args(parser, args, ["in_ref_1.png", "in_ref_2.png"], 1, 2)
             if args.verbose or args.dry_run:
                 print "\npngappend %s" % pngappend_args
             if not args.dry_run:
@@ -471,10 +471,14 @@ if __name__ == "__main__":
         if tmp_input:
             os.remove(tmp_input)
         if not args.dry_run:
+            if args.verbose:
+                print "rm %s/*" % tmpdir
             tmp_fnames = glob(os.path.join(tmpdir, "*"))
             for f in tmp_fnames:
                 os.remove(f)
         if tmpdir:
+            if args.verbose:
+                print "rmdir %s" % tmpdir
             os.rmdir(tmpdir)
         os.chdir(curdir)
     
