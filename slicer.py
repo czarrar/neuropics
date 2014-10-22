@@ -349,7 +349,7 @@ def compile_pngappend_args(parser, args, slice_fnames, w=None, h=None, output=No
     if hasattr(args, "_nslices"):
         nslices = args._nslices
     else:
-        nslices = length(slice_fnames)
+        nslices = len(slice_fnames)
     pngappend_args = string.join([ 
         string.join([ 
             slice_fnames[i] for i in range(x*w, x*w+w) if i < nslices
