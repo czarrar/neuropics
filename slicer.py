@@ -171,7 +171,10 @@ group = parser.add_argument_group('Output Image Options')
 
 ## crop underlay image
 group.add_argument('--crop', action="store_true", default=False, 
-    help="DOESN'T WORK YET. whether to crop the underlay and apply that to the overlays (with zero-padding of 1)")
+    help="whether to crop the underlay and apply that to the overlays")
+group.add_argument('--pad', action="store", type=int, default=2, 
+    help="Number of voxels of padding to add after cropping")
+
 
 ## slice type
 group.add_argument('-s', '--slice', required=True, metavar="slice_name", 
@@ -384,7 +387,7 @@ if __name__ == "__main__":
         
         # crop image?
         if args.crop:
-            new_input_args = ["-input %s" % args.input, "-prefix input_cropped.nii.gz"]
+            new_input_args = ["-input %s" % args.input, "-npad %i" % args.pad, "-prefix input_cropped.nii.gz"]
             if args.verbose or args.dry_run:
                 print "\n3dAutobox %s" % " ".join(new_input_args)
             if not args.dry_run:
