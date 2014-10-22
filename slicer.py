@@ -399,7 +399,7 @@ if __name__ == "__main__":
             if args.crop:
                 new_args = ["-input %s" % args.overlay[0], "-master input_cropped.nii.gz", "-prefix overlay_cropped.nii.gz"]
                 if args.verbose or args.dry_run:
-                    print "\3dresample %s" % " ",join(new_args)
+                    print "\n3dresample %s" % " ".join(new_args)
                 if not args.dry_run:
                     result = Process("3dresample %s" % " ".join(new_args))
                     if result.retcode:
@@ -409,7 +409,7 @@ if __name__ == "__main__":
                 if args.overlay2:
                     new_args = ["-input %s" % args.overlay2[0], "-master input_cropped.nii.gz", "-prefix overlay2_cropped.nii.gz"]
                     if args.verbose or args.dry_run:
-                        print "\3dresample %s" % " ".join(new_args)
+                        print "\n3dresample %s" % " ".join(new_args)
                     if not args.dry_run:
                         result = Process("3dresample %s" % " ".join(new_args))
                         if result.retcode:
@@ -431,7 +431,7 @@ if __name__ == "__main__":
             if args.crop:
                 new_args = ["-input %s" % args.registration, "-master input_cropped.nii.gz", "-prefix reg_cropped.nii.gz"]
                 if args.verbose or args.dry_run:
-                    print "\3dresample %s" % " ".join(new_args)
+                    print "\n3dresample %s" % " ".join(new_args)
                 if not args.dry_run:
                     result = Process("3dresample %s" % " ".join(new_args))
                     if result.retcode:
@@ -491,13 +491,13 @@ if __name__ == "__main__":
             if crop and args.edge_overlay:
                 new_args = ["-input %s" % args.edge_overlay, "-master input_cropped.nii.gz", "-prefix edge_overlay_cropped.nii.gz"]
                 if args.verbose or args.dry_run:
-                    print "\3dresample %s" % new_args
+                    print "\n3dresample %s" % " ".join(new_args)
                 if not args.dry_run:
                     result = Process("3dresample %s" % " ".join(new_args))
                     if result.retcode:
                         parser.exit(3, "error running 3dresample: \n%s\n" %
                             result.stderr)
-                args.overlay = "edge_overlay_cropped.nii.gz"
+                args.edge_overlay = "edge_overlay_cropped.nii.gz"
 
             # slicer
             (slicer_args, slice_fnames) = compile_slicer_args(parser, args)
