@@ -400,10 +400,11 @@ if __name__ == "__main__":
             
             # figure out padding
             dims = [
-                Process("fslval dim1 %s" % args.input), 
-                Process("fslval dim2 %s" % args.input), 
-                Process("fslval dim3 %s" % args.input)
+                int(Process("fslval dim1 %s" % args.input).stdout), 
+                int(Process("fslval dim2 %s" % args.input).stout), 
+                int(Process("fslval dim3 %s" % args.input).stdout)
             ]
+            print dims
             pad_dims = [ round(dim*((100.0+args.pad)/100.0)) for dim in dims ]
             if args.slice[0] == 'a': # axial
                 pad_args = "-RL %i -AP %i" % (pad_dims[0], pad_dims[1])
