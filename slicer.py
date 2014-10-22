@@ -104,6 +104,12 @@ group.add_argument('--edge-overlay', action=store_filename, metavar="FILE",
     (useful for checking registration). Note: the overlay options don't apply
     to this input.""")
 
+## Registration overlay
+## --registration (-r)
+group.add_argument('-r', '--registration', action=store_filename, metavar="FILE", 
+    default=None, help="Will mimic the registration output of FSL.")
+#exclusive_group = group.add_mutually_exclusive_group()
+
 ## FSL overlay
 group.add_argument('--overlay', action=store_overlay, nargs=3, default=None,
     metavar=("file", "min", "max"), help="image to overlay on input")
@@ -117,11 +123,6 @@ exclusive_group.add_argument("--show-negative", action="store_true",
     negative thresholded maps). Note: you can't specify both the --overlay2 and
     this option.""")
 
-## Registration overlay
-## --registration (-r)
-group.add_argument('-r', '--registration', action=store_filename, metavar="FILE", 
-    default=None, help="Will mimic the registration output of FSL.")
-#exclusive_group = group.add_mutually_exclusive_group()
 
 # OVERLAY OPTIONS
 
@@ -168,6 +169,10 @@ group.add_argument('--no-lr-labels', action=append_to_main, nargs=0,
 
 group = parser.add_argument_group('Output Image Options')
 
+## crop underlay image
+group.add_argument('--crop', action="store_true", default=False, 
+    help="DOESN'T WORK YET. whether to crop the underlay and apply that to the overlays (with zero-padding of 1)")
+
 ## slice type
 group.add_argument('-s', '--slice', required=True, metavar="slice_name", 
     help="type of slice; can be: a/axial, c/coronal, or s/sagittal")
@@ -183,10 +188,6 @@ exclusive_group.add_argument('-l', '--height', default=argparse.SUPPRESS,
 exclusive_group.add_argument('-e', '--slice-every', dest="sample", type=int,
     default=argparse.SUPPRESS, help="include every X # of slice", 
     metavar="number")
-
-## crop underlay image
-group.add_argument('--crop', action="store_true", default=False, 
-    help="DOESN'T WORK YET. whether to crop the underlay and apply that to the overlays (with zero-padding of 1)")
 
 
 # OTHER STUFF
