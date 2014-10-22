@@ -388,7 +388,7 @@ if __name__ == "__main__":
             if args.verbose or args.dry_run:
                 print "\n3dAutobox %s" % new_input_args
             if not args.dry_run:
-                result = sh.3dAutobox(new_input_args)
+                result = Process("3dAutobox %s" % " ".join(new_input_args))
                 if result.retcode:
                     parser.exit(3, "error running 3dAutobox: \n%s\n" %
                         result.stderr)
@@ -401,7 +401,7 @@ if __name__ == "__main__":
                 if args.verbose or args.dry_run:
                     print "\3dresample %s" % new_args
                 if not args.dry_run:
-                    result = sh.3dresample(new_args)
+                    result = Process("3dresample %s" % " ".join(new_args))
                     if result.retcode:
                         parser.exit(3, "error running 3dresample: \n%s\n" %
                             result.stderr)
@@ -411,7 +411,7 @@ if __name__ == "__main__":
                     if args.verbose or args.dry_run:
                         print "\3dresample %s" % new_args
                     if not args.dry_run:
-                        result = sh.3dresample(new_args)
+                        result = Process("3dresample %s" % " ".join(new_args))
                         if result.retcode:
                             parser.exit(3, "error running 3dresample: \n%s\n" %
                                 result.stderr)
@@ -433,7 +433,7 @@ if __name__ == "__main__":
                 if args.verbose or args.dry_run:
                     print "\3dresample %s" % new_args
                 if not args.dry_run:
-                    result = sh.3dresample(new_args)
+                    result = Process("3dresample %s" % " ".join(new_args))
                     if result.retcode:
                         parser.exit(3, "error running 3dresample: \n%s\n" %
                             result.stderr)
@@ -493,7 +493,7 @@ if __name__ == "__main__":
                 if args.verbose or args.dry_run:
                     print "\3dresample %s" % new_args
                 if not args.dry_run:
-                    result = sh.3dresample(new_args)
+                    result = Process("3dresample %s" % " ".join(new_args))
                     if result.retcode:
                         parser.exit(3, "error running 3dresample: \n%s\n" %
                             result.stderr)
