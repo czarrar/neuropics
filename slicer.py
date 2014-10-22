@@ -103,12 +103,13 @@ group.add_argument('--edge-overlay', action=store_filename, metavar="FILE",
     default=None, help="""An outline of a brain image is overlaid on the input
     (useful for checking registration). Note: the overlay options don't apply
     to this input.""")
+exclusive_group = group.add_mutually_exclusive_group()
 
 ## Registration overlay
 ## --registration (-r)
-group.add_argument('-r', '--registration', action=store_filename, metavar="FILE", 
+exclusive_group.add_argument('-r', '--registration', action=store_filename, metavar="FILE", 
     default=None, help="Will mimic the registration output of FSL.")
-#exclusive_group = group.add_mutually_exclusive_group()
+)
 
 ## FSL overlay
 group.add_argument('--overlay', action=store_overlay, nargs=3, default=None,
@@ -172,8 +173,8 @@ group = parser.add_argument_group('Output Image Options')
 ## crop underlay image
 group.add_argument('--crop', action="store_true", default=False, 
     help="whether to crop the underlay and apply that to the overlays")
-group.add_argument('--pad', action="store", type=int, default=4, 
-    help="Number of voxels of padding to add after cropping")
+group.add_argument('--pad', action="store", type=float, default=10.0, 
+    help="Percent of dimensions to pad add after cropping (won't work without the --crop option). Only the inplane slice dimensions will be padded. For instance, if you have axial slices, only the x and y axes will be padded.")
 
 
 ## slice type
@@ -387,7 +388,8 @@ if __name__ == "__main__":
         
         # crop image?
         if args.crop:
-            new_input_args = ["-input %s" % args.input, "-npad %i" % args.pad, "-prefix input_cropped.nii.gz"]
+            # crop            
+            new_input_args = ["-input %s" % args.input, "-npad 0", "-prefix input_cropped.nii.gz"]
             if args.verbose or args.dry_run:
                 print "\n3dAutobox %s" % " ".join(new_input_args)
             if not args.dry_run:
@@ -396,7 +398,33 @@ if __name__ == "__main__":
                     parser.exit(3, "error running 3dAutobox: \n%s\n" %
                         result.stderr)
             args.input = "input_cropped.nii.gz"
-        
+            
+            # figure out padding
+            dims = [
+                Process("fslval dim1 %s" % args.input), 
+                Process("fslval dim2 %s" % args.input), 
+                Process("fslval dim3 %s" % args.input)
+            ]
+            pad_dims = [ round(dim*((100.0+args.pad)/100.0)) for dim in dims ]
+            if args.slice[0] == 'a': # axial
+                pad_args = "-RL %i -AP %i" % (pad_dims[0], pad_dims[1])
+            elif args.slice[0] == 's': # sagital
+                pad_args = "-AP %i -IS %i" % (pad_dims[1], pad_dims[2])
+            elif args.slice[0] == 'c': # coronal
+                pad_args = "-RL %i -IS %i" % (pad_dims[0], pad_dims[2])
+            else:
+                raise Exception("unknown slice: %s" % args.slice)
+            pad_args += " -prefix input_cropped+padded.nii.gz"
+            pad_args += " %s" % args.input
+            if args.verbose or args.dry_run:
+                print "\n3dZeropad %s" % pad_args
+            if not args.dry_run:
+                result = Process("3dZeropad %s" % pad_args)
+                if result.retcode:
+                    parser.exit(3, "error running 3dZeropad: \n%s\n" %
+                        result.stderr)
+            args.input = "input_cropped+padded.nii.gz"
+            
         # overlay
         if args.overlay:
             if args.crop:
