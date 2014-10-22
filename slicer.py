@@ -386,7 +386,7 @@ if __name__ == "__main__":
         if args.crop:
             new_input_args = ["-input %s" % args.input, "-prefix input_cropped.nii.gz"]
             if args.verbose or args.dry_run:
-                print "\n3dAutobox %s" % new_input_args
+                print "\n3dAutobox %s" % " ".join(new_input_args)
             if not args.dry_run:
                 result = Process("3dAutobox %s" % " ".join(new_input_args))
                 if result.retcode:
@@ -397,25 +397,25 @@ if __name__ == "__main__":
         # overlay
         if args.overlay:
             if args.crop:
-                new_args = ["-input %s" % args.overlay, "-master input_cropped.nii.gz", "-prefix overlay_cropped.nii.gz"]
+                new_args = ["-input %s" % args.overlay[0], "-master input_cropped.nii.gz", "-prefix overlay_cropped.nii.gz"]
                 if args.verbose or args.dry_run:
-                    print "\3dresample %s" % new_args
+                    print "\3dresample %s" % " ",join(new_args)
                 if not args.dry_run:
                     result = Process("3dresample %s" % " ".join(new_args))
                     if result.retcode:
                         parser.exit(3, "error running 3dresample: \n%s\n" %
                             result.stderr)
-                args.overlay = "overlay_cropped.nii.gz"
+                args.overlay[0] = "overlay_cropped.nii.gz"
                 if args.overlay2:
-                    new_args = ["-input %s" % args.overlay2, "-master input_cropped.nii.gz", "-prefix overlay2_cropped.nii.gz"]
+                    new_args = ["-input %s" % args.overlay2[0], "-master input_cropped.nii.gz", "-prefix overlay2_cropped.nii.gz"]
                     if args.verbose or args.dry_run:
-                        print "\3dresample %s" % new_args
+                        print "\3dresample %s" % " ".join(new_args)
                     if not args.dry_run:
                         result = Process("3dresample %s" % " ".join(new_args))
                         if result.retcode:
                             parser.exit(3, "error running 3dresample: \n%s\n" %
                                 result.stderr)
-                    args.overlay = "overlay2_cropped.nii.gz"
+                    args.overlay2[0] = "overlay2_cropped.nii.gz"
             
             (overlay_args, tmp_input) = compile_overlay_args(parser, args)
             if args.verbose or args.dry_run:
@@ -431,7 +431,7 @@ if __name__ == "__main__":
             if args.crop:
                 new_args = ["-input %s" % args.registration, "-master input_cropped.nii.gz", "-prefix reg_cropped.nii.gz"]
                 if args.verbose or args.dry_run:
-                    print "\3dresample %s" % new_args
+                    print "\3dresample %s" % " ".join(new_args)
                 if not args.dry_run:
                     result = Process("3dresample %s" % " ".join(new_args))
                     if result.retcode:
