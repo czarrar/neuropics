@@ -382,8 +382,41 @@ if __name__ == "__main__":
             print 'cd %s' % tmpdir
         os.chdir(tmpdir)
         
+        # crop image?
+        if args.crop:
+            new_input_args = ["-input %s" % args.input, "-prefix input_cropped.nii.gz]
+            if args.verbose or args.dry_run:
+                print "\n3dAutobox %s" % new_input_args
+            if not args.dry_run:
+                result = sh.3dAutobox(new_input_args)
+                if result.retcode:
+                    parser.exit(3, "error running 3dAutobox: \n%s\n" %
+                        result.stderr)
+            args.input = "input_cropped.nii.gz"
+        
         # overlay
         if args.overlay:
+            if args.crop:
+                new_args = ["-input %s" % args.overlay, "-master input_cropped.nii.gz", "-prefix overlay_cropped.nii.gz]
+                if args.verbose or args.dry_run:
+                    print "\3dresample %s" % new_args
+                if not args.dry_run:
+                    result = sh.3dresample(new_args)
+                    if result.retcode:
+                        parser.exit(3, "error running 3dresample: \n%s\n" %
+                            result.stderr)
+                args.overlay = "overlay_cropped.nii.gz"
+                if args.overlay2:
+                    new_args = ["-input %s" % args.overlay2, "-master input_cropped.nii.gz", "-prefix overlay2_cropped.nii.gz]
+                    if args.verbose or args.dry_run:
+                        print "\3dresample %s" % new_args
+                    if not args.dry_run:
+                        result = sh.3dresample(new_args)
+                        if result.retcode:
+                            parser.exit(3, "error running 3dresample: \n%s\n" %
+                                result.stderr)
+                    args.overlay = "overlay2_cropped.nii.gz"
+            
             (overlay_args, tmp_input) = compile_overlay_args(parser, args)
             if args.verbose or args.dry_run:
                 print "\noverlay %s" % overlay_args
@@ -395,6 +428,17 @@ if __name__ == "__main__":
             args.input = tmp_input
         
         if args.registration:
+            if args.crop:
+                new_args = ["-input %s" % args.registration, "-master input_cropped.nii.gz", "-prefix reg_cropped.nii.gz]
+                if args.verbose or args.dry_run:
+                    print "\3dresample %s" % new_args
+                if not args.dry_run:
+                    result = sh.3dresample(new_args)
+                    if result.retcode:
+                        parser.exit(3, "error running 3dresample: \n%s\n" %
+                            result.stderr)
+                args.overlay = "reg_cropped.nii.gz"
+            
             # slicer (ref over input)
             (slicer_args, slice_fnames) = compile_slicer_args_for_registration(parser, args)
             if args.verbose or args.dry_run:
@@ -443,7 +487,18 @@ if __name__ == "__main__":
                     parser.exit(3, "error running pngappend: \n%s\n" % 
                         result.stderr)
             
-        else:            
+        else:
+            if crop and args.edge_overlay
+                new_args = ["-input %s" % args.edge_overlay, "-master input_cropped.nii.gz", "-prefix edge_overlay_cropped.nii.gz]
+                if args.verbose or args.dry_run:
+                    print "\3dresample %s" % new_args
+                if not args.dry_run:
+                    result = sh.3dresample(new_args)
+                    if result.retcode:
+                        parser.exit(3, "error running 3dresample: \n%s\n" %
+                            result.stderr)
+                args.overlay = "edge_overlay_cropped.nii.gz"
+
             # slicer
             (slicer_args, slice_fnames) = compile_slicer_args(parser, args)
             if args.verbose or args.dry_run:
