@@ -488,7 +488,7 @@ if __name__ == "__main__":
                         result.stderr)
             
         else:
-            if crop and args.edge_overlay
+            if crop and args.edge_overlay:
                 new_args = ["-input %s" % args.edge_overlay, "-master input_cropped.nii.gz", "-prefix edge_overlay_cropped.nii.gz"]
                 if args.verbose or args.dry_run:
                     print "\3dresample %s" % new_args
