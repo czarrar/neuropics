@@ -384,7 +384,7 @@ if __name__ == "__main__":
         
         # crop image?
         if args.crop:
-            new_input_args = ["-input %s" % args.input, "-prefix input_cropped.nii.gz]
+            new_input_args = ["-input %s" % args.input, "-prefix input_cropped.nii.gz"]
             if args.verbose or args.dry_run:
                 print "\n3dAutobox %s" % new_input_args
             if not args.dry_run:
@@ -397,7 +397,7 @@ if __name__ == "__main__":
         # overlay
         if args.overlay:
             if args.crop:
-                new_args = ["-input %s" % args.overlay, "-master input_cropped.nii.gz", "-prefix overlay_cropped.nii.gz]
+                new_args = ["-input %s" % args.overlay, "-master input_cropped.nii.gz", "-prefix overlay_cropped.nii.gz"]
                 if args.verbose or args.dry_run:
                     print "\3dresample %s" % new_args
                 if not args.dry_run:
@@ -407,7 +407,7 @@ if __name__ == "__main__":
                             result.stderr)
                 args.overlay = "overlay_cropped.nii.gz"
                 if args.overlay2:
-                    new_args = ["-input %s" % args.overlay2, "-master input_cropped.nii.gz", "-prefix overlay2_cropped.nii.gz]
+                    new_args = ["-input %s" % args.overlay2, "-master input_cropped.nii.gz", "-prefix overlay2_cropped.nii.gz"]
                     if args.verbose or args.dry_run:
                         print "\3dresample %s" % new_args
                     if not args.dry_run:
@@ -429,7 +429,7 @@ if __name__ == "__main__":
         
         if args.registration:
             if args.crop:
-                new_args = ["-input %s" % args.registration, "-master input_cropped.nii.gz", "-prefix reg_cropped.nii.gz]
+                new_args = ["-input %s" % args.registration, "-master input_cropped.nii.gz", "-prefix reg_cropped.nii.gz"]
                 if args.verbose or args.dry_run:
                     print "\3dresample %s" % new_args
                 if not args.dry_run:
@@ -489,7 +489,7 @@ if __name__ == "__main__":
             
         else:
             if crop and args.edge_overlay
-                new_args = ["-input %s" % args.edge_overlay, "-master input_cropped.nii.gz", "-prefix edge_overlay_cropped.nii.gz]
+                new_args = ["-input %s" % args.edge_overlay, "-master input_cropped.nii.gz", "-prefix edge_overlay_cropped.nii.gz"]
                 if args.verbose or args.dry_run:
                     print "\3dresample %s" % new_args
                 if not args.dry_run:
