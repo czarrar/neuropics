@@ -463,13 +463,16 @@ if __name__ == "__main__":
                     parser.exit(3, "error running pngappend: \n%s\n" % 
                         result.stderr)
     finally:
+        import os
+        from glob import glob
         if args.verbose:
             print "\n...cleaning up\n"
         # Remove temporary directories/files
         if tmp_input:
             os.remove(tmp_input)
         if not args.dry_run:
-            for f in slice_fnames:
+            tmp_fnames = glob(os.path.join(tmpdir, "*"))
+            for f in tmp_fnames:
                 os.remove(f)
         if tmpdir:
             os.rmdir(tmpdir)
