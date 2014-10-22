@@ -48,6 +48,8 @@ Generates PNG images from 2D brain slices. Can optionally overlay statistical im
 
 ### Main Image Options:
 
+Note that the options for `--lut` are actually not the same as fslview. They are found in `$FSLDIR/etc/luts`.
+
 ```
   --slice-labels
   --lut color           use a different colour map from that specified in the
