@@ -172,7 +172,7 @@ group = parser.add_argument_group('Output Image Options')
 ## crop underlay image
 group.add_argument('--crop', action="store_true", default=False, 
     help="whether to crop the underlay and apply that to the overlays")
-group.add_argument('--pad', action="store", type=int, default=2, 
+group.add_argument('--pad', action="store", type=int, default=4, 
     help="Number of voxels of padding to add after cropping")
 
 
