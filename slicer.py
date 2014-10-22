@@ -338,7 +338,7 @@ def compile_slicer_args_for_registration(parser, args, inverse=False):
             slicer_fnames.append(fname)
             slicer_args.append("-%s %.2f %s" % (axis, relative_slice, fname))
         
-    return (string.join(slicer_args, " "), slice_fnames)
+    return (string.join(slicer_args, " "), slicer_fnames)
     
 
 def compile_pngappend_args(parser, args, slice_fnames, w=None, h=None, output=None):
