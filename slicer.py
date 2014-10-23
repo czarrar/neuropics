@@ -177,11 +177,11 @@ group.add_argument('--pad', action="store", type=float, default=10.0,
 
 
 ## slice type
-group.add_argument('-s', '--slice', required=True, metavar="slice_name", 
+group.add_argument('-s', '--slice', metavar="slice_name", 
     help="type of slice; can be: a/axial, c/coronal, or s/sagittal")
 
 ## image width
-group.add_argument('-w', '--width', required=True, type=int, metavar="slices", 
+group.add_argument('-w', '--width', type=int, metavar="slices", 
     help="image width in # of slices")
 
 ## image height or slice step
@@ -373,6 +373,10 @@ if __name__ == "__main__":
     if os.path.isfile(args.output) and not args.force:
         parser.exit("Output file '%s' already exists, use --force if you want to overwrite it" % args.output)
         
+    if not args.registration and not args.slice:
+        parser.exit("Must give -s/--slice when not using the -r/--registration option")
+    if not args.registration and not args.width:
+        parser.exit("Must give -w/--width when not using the -r/--registration option")   
     # TODO: check for required programs on path
     
     curdir = os.getcwd()
@@ -400,12 +404,14 @@ if __name__ == "__main__":
             
             # figure out padding
             dims = [
-                int(Process("fslval dim1 %s" % args.input).stdout), 
-                int(Process("fslval dim2 %s" % args.input).stout), 
-                int(Process("fslval dim3 %s" % args.input).stdout)
+                int(Process("fslval %s dim1" % args.input).stdout), 
+                int(Process("fslval %s dim2" % args.input).stdout), 
+                int(Process("fslval %s dim3" % args.input).stdout)
             ]
-            print dims
             pad_dims = [ round(dim*((100.0+args.pad)/100.0)) for dim in dims ]
+	    if args.verbose:
+		print "original dims: %s" % dims
+		print "padded dims: %s" % pad_dims
             if args.slice[0] == 'a': # axial
                 pad_args = "-RL %i -AP %i" % (pad_dims[0], pad_dims[1])
             elif args.slice[0] == 's': # sagital
@@ -428,7 +434,7 @@ if __name__ == "__main__":
         # overlay
         if args.overlay:
             if args.crop:
-                new_args = ["-input %s" % args.overlay[0], "-master input_cropped.nii.gz", "-prefix overlay_cropped.nii.gz"]
+                new_args = ["-input %s" % args.overlay[0], "-master %s" % args.input, "-prefix overlay_cropped.nii.gz"]
                 if args.verbose or args.dry_run:
                     print "\n3dresample %s" % " ".join(new_args)
                 if not args.dry_run:
@@ -438,7 +444,7 @@ if __name__ == "__main__":
                             result.stderr)
                 args.overlay[0] = "overlay_cropped.nii.gz"
                 if args.overlay2:
-                    new_args = ["-input %s" % args.overlay2[0], "-master input_cropped.nii.gz", "-prefix overlay2_cropped.nii.gz"]
+                    new_args = ["-input %s" % args.overlay2[0], "-master %s" % args.input, "-prefix overlay2_cropped.nii.gz"]
                     if args.verbose or args.dry_run:
                         print "\n3dresample %s" % " ".join(new_args)
                     if not args.dry_run:
@@ -460,7 +466,7 @@ if __name__ == "__main__":
         
         if args.registration:
             if args.crop:
-                new_args = ["-input %s" % args.registration, "-master input_cropped.nii.gz", "-prefix reg_cropped.nii.gz"]
+                new_args = ["-input %s" % args.registration, "-master %s" % args.input, "-prefix reg_cropped.nii.gz"]
                 if args.verbose or args.dry_run:
                     print "\n3dresample %s" % " ".join(new_args)
                 if not args.dry_run:
@@ -520,7 +526,7 @@ if __name__ == "__main__":
             
         else:
             if args.crop and args.edge_overlay:
-                new_args = ["-input %s" % args.edge_overlay, "-master input_cropped.nii.gz", "-prefix edge_overlay_cropped.nii.gz"]
+                new_args = ["-input %s" % args.edge_overlay, "-master %s" % args.input, "-prefix edge_overlay_cropped.nii.gz"]
                 if args.verbose or args.dry_run:
                     print "\n3dresample %s" % " ".join(new_args)
                 if not args.dry_run:
