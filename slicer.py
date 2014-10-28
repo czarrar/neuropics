@@ -277,9 +277,9 @@ def compile_slicer_args(parser, args):
             string.join(slice_name_lookup.keys(), ", "))
     
     ## total number of slices
-    if args.height:
+    if hasattr(args, "height"):
         nslices = args.width * args.height
-    elif args.sample:
+    elif hasattr(args, "sample"):
         nslices = round(float(args._dim[skey])/args.sample)
     
     ## list of absolute slice #s, etc
