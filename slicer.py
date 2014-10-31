@@ -97,13 +97,13 @@ group.add_argument('output', action=store_output, help="Output 2D PNG image")
 # OVERLAYS
 
 group = parser.add_argument_group('Overlay Inputs')
+exclusive_group = group.add_mutually_exclusive_group()
 
 ## FSL slicer
-group.add_argument('--edge-overlay', action=store_filename, metavar="FILE", 
+exclusive_group.add_argument('--edge-overlay', action=store_filename, metavar="FILE", 
     default=None, help="""An outline of a brain image is overlaid on the input
     (useful for checking registration). Note: the overlay options don't apply
     to this input.""")
-exclusive_group = group.add_mutually_exclusive_group()
 
 ## Registration overlay
 ## --registration (-r)
@@ -113,7 +113,6 @@ exclusive_group.add_argument('-r', '--registration', action=store_filename, meta
 ## FSL overlay
 group.add_argument('--overlay', action=store_overlay, nargs=3, default=None,
     metavar=("file", "min", "max"), help="image to overlay on input")
-exclusive_group = group.add_mutually_exclusive_group()
 exclusive_group.add_argument('--overlay2', action=store_overlay, nargs=3, 
     default=None, help="2nd image to overlay on input", metavar=("file", "min", 
     "max"), )
@@ -191,7 +190,8 @@ exclusive_group.add_argument('-l', '--height', default=argparse.SUPPRESS,
 exclusive_group.add_argument('-e', '--slice-every', dest="sample", type=int,
     default=argparse.SUPPRESS, help="include every X # of slice", 
     metavar="number")
-
+exclusive_group.add_argument('--auto', action='store_true', default=False, 
+    help="this option must be used with -r and cannot be used with any other overlay option")
 
 # OTHER STUFF
 
